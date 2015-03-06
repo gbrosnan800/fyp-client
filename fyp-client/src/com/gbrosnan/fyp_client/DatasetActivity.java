@@ -6,15 +6,26 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 public class DatasetActivity extends Activity {
 
+	
+	Spinner dropdown;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView(R.layout.activity_dataset);
+		
+		dropdown = (Spinner) findViewById(R.id.dataset_spinner);
+		String[] exercises = new String[]{"bicep_curl", "lat_raise", "shoulder_shrug", "back_fly"};
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, exercises);
+		dropdown.setAdapter(adapter);
+		
 	}
 
 	@Override

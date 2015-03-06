@@ -27,17 +27,29 @@
 		android:textColor="#095529"
         android:text="Dataset" />
     
+    
+    <TextView
+        android:id="@+id/lblDataset_server"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/dataset_header"
+        android:layout_marginTop="40dp"
+        android:textColor="#095529"
+        android:text="Server" />
+   
+    
+    
    <TextView
         android:id="@+id/lblDataset_username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/dataset_header"
-        android:layout_marginTop="35dp"
+        android:layout_below="@+id/lblDataset_server"
+        android:layout_marginTop="20dp"
         android:textColor="#095529"
         android:text="Username" />
    
    
-      <TextView
+   <TextView
         android:id="@+id/lblDataset_weight"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -65,6 +77,18 @@
         android:layout_marginTop="20dp"
         android:textColor="#095529"
         android:text="Exercise" />
+   
+    <EditText
+        android:id="@+id/txtDataset_ip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/lblDataset_server"
+        android:layout_alignBottom="@+id/lblDataset_server"
+        android:layout_marginStart="80dp"
+        android:ems="10"
+        android:inputType="number"
+        android:textColor="#FFFFFF"
+        android:text="192.168.173.1" />  
    
     <EditText
         android:id="@+id/txtDataset_username"
@@ -102,6 +126,81 @@
         android:gravity="center"
         android:inputType="number"
         android:textColor="#FFFFFF" />
+    
+    <Spinner
+        android:id="@+id/dataset_spinner"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/lblDataset_repcount"
+		android:layout_marginTop="20dp"
+        android:layout_marginStart="80dp"
+        android:background="#095529"
+        android:spinnerStyle="@android:style/Widget.Spinner.DropDown"
+        />
+    
+    <Button
+        android:id="@+id/btnDataset_start"
+        android:text="Start" 
+        android:textSize="20sp"
+        android:textColor="#FFFFFF"
+        android:layout_below="@+id/lblDataset_exname"
+        android:layout_marginTop="40dp"
+        android:layout_marginStart="20dp"
+        
+		android:layout_width="120dp"
+		android:layout_height="60dp"
+		android:background="@drawable/buttonshape"
+		android:shadowColor="#A8A8A8"
+		android:shadowDx="0"
+		android:shadowDy="0"
+		android:shadowRadius="0"
+	/>
+    
+    <Button
+        android:id="@+id/btnDataset_stop"
+        android:text="Stop" 
+        android:textSize="20sp"
+        android:textColor="#FFFFFF"
+        android:layout_below="@+id/lblDataset_exname"
+        android:layout_marginTop="40dp"
+        android:layout_marginStart="180dp"
+        
+		android:layout_width="120dp"
+		android:layout_height="60dp"
+		android:background="@drawable/buttonshape"
+		android:shadowColor="#A8A8A8"
+		android:shadowDx="0"
+		android:shadowDy="0"
+		android:shadowRadius="0"
+	/>
+
+    <Button
+        android:id="@+id/btnDataset_send"
+        android:text="Send" 
+        android:textSize="20sp"
+        android:textColor="#FFFFFF"
+        android:layout_below="@+id/btnDataset_start"
+        android:layout_marginTop="40dp"
+        android:layout_centerHorizontal="true"
+        
+		android:layout_width="120dp"
+		android:layout_height="60dp"
+		android:background="@drawable/buttonshape"
+		android:shadowColor="#A8A8A8"
+		android:shadowDx="0"
+		android:shadowDy="0"
+		android:shadowRadius="0"
+	/>
+    
+    <TextView
+        android:id="@+id/lblDataset_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btnDataset_send"
+        android:layout_marginTop="10dp"
+        android:layout_centerHorizontal="true"
+        android:textColor="#A60002"
+        android:text="Status Message" />
     
 
 </RelativeLayout>
