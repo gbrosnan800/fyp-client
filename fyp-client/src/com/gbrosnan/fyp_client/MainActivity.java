@@ -54,16 +54,19 @@ public class MainActivity extends Activity implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		
+		Intent intent;
 		switch (v.getId()) {
 		
 			case R.id.btnDataset:
 				
-				Intent intent = new Intent(this, DatasetActivity.class);
+				intent = new Intent(this, DatasetActivity.class);
 				startActivity(intent);
 				break;
 				
 			case R.id.btnDemoExDetect:
 				
+				intent = new Intent(this, DetectActivity.class);
+				startActivity(intent);
 				break;
 			
 			case R.id.btnDemoFeedback:

@@ -26,6 +26,10 @@
             android:name=".DatasetActivity"
             android:label="@string/title_activity_dataset" >
         </activity>
+        <activity
+            android:name=".DetectActivity"
+            android:label="@string/title_activity_detect" >
+        </activity>
     </application>
 
 </manifest>
