@@ -9,27 +9,22 @@ public class ExerciseRaw {
 	private String type;
 	private String username;
 	private String exerciseName;
+	private double weight;
 	private int repCount;
 	private Date date;
 	private List<SensorSample> sensorSampleList;
 	
-	public ExerciseRaw(String type, String username, String exerciseName, int repCount, Date date, List<SensorSample> sensorSampleList){
+	public ExerciseRaw(int id, String type, String username, String exerciseName, double weight, int repCount, Date date, List<SensorSample> sensorSampleList) {
+		setId(id);
 		setType(type);
 		setUsername(username);
 		setExerciseName(exerciseName);
+		setWeight(weight);
 		setRepCount(repCount);
 		setDate(date);
 		setSensorSampleList(sensorSampleList);
 	}
-	
-	public ExerciseRaw(int id, String username, String exerciseName, Date date, List<SensorSample> sensorSampleList){
-		setId(id);
-		setUsername(username);
-		setExerciseName(exerciseName);
-		setDate(date);
-		setSensorSampleList(sensorSampleList);
-	}
-	
+		
 	public int getId() {
 		return id;
 	}
@@ -58,6 +53,14 @@ public class ExerciseRaw {
 	public void setExerciseName(String exerciseName) {
 		this.exerciseName = exerciseName;
 	}
+	public double getWeight() {
+		return weight;
+	}
+
+	public void setWeight(double weight) {
+		this.weight = weight;
+	}
+
 	public int getRepCount() {
 		return repCount;
 	}

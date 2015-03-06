@@ -1,24 +1,45 @@
 package com.gbrosnan.fyp_client;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.InputStreamEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+
+import com.gbrosnan.objects.ExerciseJsonSerializer;
 import com.gbrosnan.objects.ExerciseRaw;
 import com.gbrosnan.objects.SensorSample;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.AudioManager;
+import android.media.ToneGenerator;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.PowerManager;
 import android.os.StrictMode;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
@@ -26,6 +47,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class DatasetActivity extends Activity implements OnClickListener, SensorEventListener {
 
@@ -33,13 +55,15 @@ public class DatasetActivity extends Activity implements OnClickListener, Sensor
 	Spinner dropdown;
 	TextView status;
 	private Button btnStart, btnStop, btnSend;
-	EditText textServer, txtUsername, txtLiftWeight, txtReps;
+	EditText txtIpAddress, txtUsername, txtLiftWeight, txtReps;
 	private SensorManager sensorManager;
 	private Sensor sensor;
 	private boolean started = false;
     ExerciseRaw exerciseRaw;
     String exerciseAsJsonString;
     private List<SensorSample> sensorData;
+    PowerManager pm;
+    PowerManager.WakeLock wl;
 	
 	
 	@Override
@@ -63,12 +87,12 @@ public class DatasetActivity extends Activity implements OnClickListener, Sensor
 		String[] exercises = new String[]{"bicep_curl", "lat_raise", "shoulder_shrug", "back_fly"};
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, exercises);
 		dropdown.setAdapter(adapter);
-		
+
 		btnStart = (Button) findViewById(R.id.btnDataset_start);
 		btnStop = (Button) findViewById(R.id.btnDataset_stop);
 		btnSend = (Button) findViewById(R.id.btnDataset_send);
 		status = (TextView) findViewById(R.id.lblDataset_status);
-		textServer = (EditText) findViewById(R.id.txtDetect_ip);
+		txtIpAddress = (EditText) findViewById(R.id.txtDataset_ip);
 		txtUsername = (EditText) findViewById(R.id.txtDataset_username);
 		txtLiftWeight = (EditText) findViewById(R.id.txtDataset_weight);
 		txtReps = (EditText) findViewById(R.id.txtDataset_reps);
@@ -78,7 +102,12 @@ public class DatasetActivity extends Activity implements OnClickListener, Sensor
 		btnSend.setOnClickListener(this);
 		
 		btnStop.setEnabled(false);
-        btnSend.setEnabled(false);		
+        btnSend.setEnabled(false);	
+        
+        pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        wl = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "My Tag");
+        
+        
 	}
 
 	@Override
@@ -99,7 +128,7 @@ public class DatasetActivity extends Activity implements OnClickListener, Sensor
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	  
+		  
     @Override
     public void onSensorChanged(SensorEvent event) {
     	
@@ -134,16 +163,36 @@ public class DatasetActivity extends Activity implements OnClickListener, Sensor
 		
 			case R.id.btnDataset_start:
 				if(isInputValid()) {
-					status.setText("valid!");
+					status.setText("Go after beep!");
+					btnStart.setEnabled(false);
+		            btnStop.setEnabled(false);
+		            btnSend.setEnabled(false);
+		            sensorData = new ArrayList<SensorSample>();
+					started = true;
+		            Handler handler = new Handler();
+		            handler.postDelayed(new Runnable() {
+		            	public void run() {
+		            		wl.acquire();
+		            		startSensor();
+		            		btnStop.setEnabled(true);
+		            	}            	
+		            }, 4000);
 				}			
 				break;
 				
 			case R.id.btnDataset_stop:
-				
+				wl.release();
+	            btnStart.setEnabled(true);
+	            btnStop.setEnabled(false);
+	            btnSend.setEnabled(true);
+	            started = false;
+	            sensorManager.unregisterListener(this);            
+	            createNewExerciseObject();
+	            status.setText("Number of sensor samples: " + exerciseRaw.getSensorSampleList().size());
 				break;
 			
-			case R.id.btnDataset_send:
-
+			case R.id.btnDataset_send:				
+				uploadDataToServer();
 				break;
 				
 			default:
@@ -180,6 +229,66 @@ public class DatasetActivity extends Activity implements OnClickListener, Sensor
 		   return false;
 		 }  
    }
+   
+   private void startSensor() { 
+		sensor = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
+        ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 50);
+        toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 500);	
+        sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_FASTEST);
+   }
+   
+   private void createNewExerciseObject() {
+   	
+	String username = txtUsername.getText().toString();
+   	String exerciseName = dropdown.getSelectedItem().toString();
+   	double weight = Double.parseDouble(txtLiftWeight.getText().toString());
+   	int repCount = Integer.parseInt(txtReps.getText().toString());
+   	Date date = getNewDate();
+   	exerciseRaw = new ExerciseRaw(0, "dataset", username, exerciseName, weight, repCount, date, sensorData);
+   
+	Gson gson = new GsonBuilder().registerTypeAdapter(ExerciseRaw.class, new ExerciseJsonSerializer()).create();
+	exerciseAsJsonString = gson.toJson(exerciseRaw);   	
+   }
+   
+   public Date getNewDate() {
+	   Calendar cal = Calendar.getInstance();
+	   return cal.getTime();    	
+   }
+   
+   private void uploadDataToServer() {
+	   
+	   
+	   String ipAdddress = txtIpAddress.getText().toString();	   
+	   String uri = "http://" + ipAdddress  + "/fyp-server/rest/datasetitem";
+
+	   HttpClient httpclient = new DefaultHttpClient();
+	   HttpPost httppost = new HttpPost(uri);
+	   String responseString = "";	   
+	   try {
+		   	InputStream jsonStream = new ByteArrayInputStream(exerciseAsJsonString.getBytes());
+		   	InputStreamEntity reqEntity = new InputStreamEntity(jsonStream, -1);
+	   		reqEntity.setContentType("binary/octet-stream");       	
+	   		reqEntity.setChunked(true); // Send in multiple parts if needed
+	   		httppost.setEntity(reqEntity);
+
+	   		;
+	 	    HttpResponse response = httpclient.execute(httppost);
+	 	    StringBuilder sb = new StringBuilder();
+	 	    BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()), 65728);
+	 	    String line = null;
+	 	    while ((line = reader.readLine()) != null) {
+	 	        sb.append(line);
+	 	    }
+	 	    responseString = sb.toString();	    
+	 	    status.setText(responseString);
+	 	    	
+		}  catch (Exception e) {
+			status.setText(e.toString());
+		}
+
+   }
+
+
    
    
 }
