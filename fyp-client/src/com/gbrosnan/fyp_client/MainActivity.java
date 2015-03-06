@@ -71,6 +71,8 @@ public class MainActivity extends Activity implements OnClickListener {
 			
 			case R.id.btnDemoFeedback:
 				
+				intent = new Intent(this, FeedbackActivity.class);
+				startActivity(intent);
 				break;
 				
 			default:

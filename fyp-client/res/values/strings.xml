@@ -6,5 +6,6 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_dataset">Dataset</string>
     <string name="title_activity_detect">DetectActivity</string>
+    <string name="title_activity_feedback">FeedbackActivity</string>
 
 </resources>

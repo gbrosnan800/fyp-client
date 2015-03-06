@@ -30,6 +30,10 @@
             android:name=".DetectActivity"
             android:label="@string/title_activity_detect" >
         </activity>
+        <activity
+            android:name=".FeedbackActivity"
+            android:label="@string/title_activity_feedback" >
+        </activity>
     </application>
 
 </manifest>
