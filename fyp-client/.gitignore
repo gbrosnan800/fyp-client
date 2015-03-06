@@ -16,3 +16,4 @@ local.properties
 
 # Windows files
 Thumbs.db
+/project.properties
