@@ -14,6 +14,14 @@ public class ExerciseRaw {
 	private Date date;
 	private List<SensorSample> sensorSampleList;
 	
+	
+	public ExerciseRaw(int id, String type, Date date, List<SensorSample> sensorSampleList) {
+		setId(id);
+		setType(type);
+		setDate(date);
+		setSensorSampleList(sensorSampleList);
+	}
+	
 	public ExerciseRaw(int id, String type, String username, String exerciseName, double weight, int repCount, Date date, List<SensorSample> sensorSampleList) {
 		setId(id);
 		setType(type);

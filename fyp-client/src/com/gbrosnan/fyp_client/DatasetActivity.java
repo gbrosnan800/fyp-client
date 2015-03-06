@@ -50,7 +50,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class DatasetActivity extends Activity implements OnClickListener, SensorEventListener {
-
 	
 	Spinner dropdown;
 	TextView status;
@@ -257,7 +256,7 @@ public class DatasetActivity extends Activity implements OnClickListener, Sensor
    
    private void uploadDataToServer() {
 	   
-	   
+	   status.setText("Detecting...");
 	   String ipAdddress = txtIpAddress.getText().toString();	   
 	   String uri = "http://" + ipAdddress  + "/fyp-server/rest/datasetitem";
 
@@ -279,7 +278,7 @@ public class DatasetActivity extends Activity implements OnClickListener, Sensor
 	 	    while ((line = reader.readLine()) != null) {
 	 	        sb.append(line);
 	 	    }
-	 	    responseString = sb.toString();	    
+	 	    responseString = sb.toString();	   	 	    
 	 	    status.setText(responseString);
 	 	    	
 		}  catch (Exception e) {
