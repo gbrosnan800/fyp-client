@@ -2,6 +2,7 @@ package com.gbrosnan.fyp_client;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -9,10 +10,14 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.http.ConnectionClosedException;
 import org.apache.http.HttpResponse;
+import org.apache.http.NoHttpResponseException;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.ConnectionPoolTimeoutException;
 import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 
@@ -188,7 +193,7 @@ public class DatasetActivity extends Activity implements OnClickListener, Sensor
 				break;
 			
 			case R.id.btnDataset_send:				
-				createNewExerciseObject();
+				createNewExerciseObject();	
 				status.setText("Object created - sending to server...");
 				uploadDataToServer();
 				break;
@@ -254,8 +259,7 @@ public class DatasetActivity extends Activity implements OnClickListener, Sensor
    }
    
    private void uploadDataToServer() {
-	   
-	   status.setText("Detecting...");
+	   	   
 	   String ipAdddress = txtIpAddress.getText().toString();	   
 	   String uri = "http://" + ipAdddress  + "/fyp-server/rest/datasetitem";
 
@@ -268,9 +272,7 @@ public class DatasetActivity extends Activity implements OnClickListener, Sensor
 	   		reqEntity.setContentType("binary/octet-stream");       	
 	   		reqEntity.setChunked(true); // Send in multiple parts if needed
 	   		httppost.setEntity(reqEntity);
-
-	   		;
-	 	    HttpResponse response = httpclient.execute(httppost);
+	 	    HttpResponse response = httpclient.execute(httppost);	 	    
 	 	    StringBuilder sb = new StringBuilder();
 	 	    BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()), 65728);
 	 	    String line = null;
@@ -279,10 +281,18 @@ public class DatasetActivity extends Activity implements OnClickListener, Sensor
 	 	    }
 	 	    responseString = sb.toString();	   	 	    
 	 	    status.setText(responseString);
-	 	    	
-		}  catch (Exception e) {
+	 	    
+	    } catch (NoHttpResponseException e) {
+			status.setText(e.toString());		
+	    } catch (ConnectionClosedException e) {
 			status.setText(e.toString());
-		}
+		} catch (ConnectionPoolTimeoutException e) {
+			status.setText(e.toString());
+		} catch (IOException e) {
+			status.setText(e.toString());
+		} catch (Exception e) {
+			status.setText(e.toString());
+		} 
 
    }
 
