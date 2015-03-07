@@ -104,9 +104,7 @@ public class DatasetActivity extends Activity implements OnClickListener, Sensor
         btnSend.setEnabled(false);	
         
         pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-        wl = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "My Tag");
-        
-        
+        wl = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "My Tag");  
 	}
 
 	@Override
@@ -185,12 +183,13 @@ public class DatasetActivity extends Activity implements OnClickListener, Sensor
 	            btnStop.setEnabled(false);
 	            btnSend.setEnabled(true);
 	            started = false;
-	            sensorManager.unregisterListener(this);            
-	            createNewExerciseObject();
-	            status.setText("Number of sensor samples: " + exerciseRaw.getSensorSampleList().size());
+	            sensorManager.unregisterListener(this);            	            
+	            status.setText("Number of sensor samples: " + sensorData.size());
 				break;
 			
 			case R.id.btnDataset_send:				
+				createNewExerciseObject();
+				status.setText("Object created - sending to server...");
 				uploadDataToServer();
 				break;
 				
