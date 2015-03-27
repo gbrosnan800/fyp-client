@@ -56,10 +56,9 @@ import android.widget.Toast;
 
 public class DatasetActivity extends Activity implements OnClickListener, SensorEventListener {
 	
-	Spinner dropdown;
 	TextView status;
 	private Button btnStart, btnStop, btnSend;
-	EditText txtIpAddress, txtUsername, txtLiftWeight, txtReps;
+	EditText txtIpAddress, txtUsername, txtLiftWeight, txtReps, txtExercise, txtCollection;
 	private SensorManager sensorManager;
 	private Sensor sensor;
 	private boolean started = false;
@@ -87,11 +86,6 @@ public class DatasetActivity extends Activity implements OnClickListener, Sensor
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
         sensorData = new ArrayList<SensorSample>();
 		
-		dropdown = (Spinner) findViewById(R.id.dataset_spinner);
-		String[] exercises = new String[]{"bicep_curl", "lat_raise", "shoulder_shrug", "back_fly"};
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, exercises);
-		dropdown.setAdapter(adapter);
-
 		btnStart = (Button) findViewById(R.id.btnDataset_start);
 		btnStop = (Button) findViewById(R.id.btnDataset_stop);
 		btnSend = (Button) findViewById(R.id.btnDataset_send);
@@ -100,6 +94,8 @@ public class DatasetActivity extends Activity implements OnClickListener, Sensor
 		txtUsername = (EditText) findViewById(R.id.txtDataset_username);
 		txtLiftWeight = (EditText) findViewById(R.id.txtDataset_weight);
 		txtReps = (EditText) findViewById(R.id.txtDataset_reps);
+		txtExercise = (EditText) findViewById(R.id.txtDataset_exerciseTxt);
+		txtCollection = (EditText) findViewById(R.id.txtDataset_collection);
 		
 		btnStart.setOnClickListener(this);
 		btnStop.setOnClickListener(this);
@@ -242,13 +238,12 @@ public class DatasetActivity extends Activity implements OnClickListener, Sensor
    
    private void createNewExerciseObject() {
    	
-	String username = txtUsername.getText().toString();
-   	String exerciseName = dropdown.getSelectedItem().toString();
+	String username = txtUsername.getText().toString();   	
+	String exerciseName = txtExercise.getText().toString();
    	double weight = Double.parseDouble(txtLiftWeight.getText().toString());
    	int repCount = Integer.parseInt(txtReps.getText().toString());
    	Date date = getNewDate();
    	exerciseRaw = new ExerciseRaw(0, "dataset", username, exerciseName, weight, repCount, date, sensorData);
-   
 	Gson gson = new GsonBuilder().registerTypeAdapter(ExerciseRaw.class, new ExerciseJsonSerializer()).create();
 	exerciseAsJsonString = gson.toJson(exerciseRaw);   	
    }
@@ -259,9 +254,10 @@ public class DatasetActivity extends Activity implements OnClickListener, Sensor
    }
    
    private void uploadDataToServer() {
-	   	   
+	   
 	   String ipAdddress = txtIpAddress.getText().toString();	   
-	   String uri = "http://" + ipAdddress  + "/fyp-server/rest/datasetitem";
+	   String collectionName = txtCollection.getText().toString();
+	   String uri = "http://" + ipAdddress  + "/fyp-server/rest/datasetitem/" + collectionName;
 
 	   HttpClient httpclient = new DefaultHttpClient();
 	   HttpPost httppost = new HttpPost(uri);
@@ -293,7 +289,6 @@ public class DatasetActivity extends Activity implements OnClickListener, Sensor
 		} catch (Exception e) {
 			status.setText(e.toString());
 		} 
-
    }
 
 

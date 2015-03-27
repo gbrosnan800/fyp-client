@@ -78,6 +78,15 @@
         android:textColor="#095529"
         android:text="Exercise" />
    
+   <TextView
+        android:id="@+id/lblDataset_collection"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/lblDataset_exname"
+        android:layout_marginTop="20dp"
+        android:textColor="#095529"
+        android:text="Collection" />
+   
     <EditText
         android:id="@+id/txtDataset_ip"
         android:layout_width="wrap_content"
@@ -127,23 +136,38 @@
         android:inputType="number"
         android:textColor="#FFFFFF" />
     
-    <Spinner
-        android:id="@+id/dataset_spinner"
-        android:layout_width="fill_parent"
+    <EditText
+        android:id="@+id/txtDataset_exerciseTxt"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/lblDataset_repcount"
-		android:layout_marginTop="20dp"
+        android:layout_alignBaseline="@+id/lblDataset_exname"
+        android:layout_alignBottom="@+id/lblDataset_exname"
         android:layout_marginStart="80dp"
-        android:background="#095529"
-        android:spinnerStyle="@android:style/Widget.Spinner.DropDown"
-        />
+        android:ems="10"
+        android:text="bicep_curl"
+        android:gravity="center"
+        android:inputType="number"
+        android:textColor="#FFFFFF" />
+    
+     <EditText
+        android:id="@+id/txtDataset_collection"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/lblDataset_collection"
+        android:layout_alignBottom="@+id/lblDataset_collection"
+        android:layout_marginStart="80dp"
+        android:ems="10"
+        android:text="new_set"
+        android:gravity="center"
+        android:inputType="number"
+        android:textColor="#FFFFFF" />
     
     <Button
         android:id="@+id/btnDataset_start"
         android:text="Start" 
         android:textSize="20sp"
         android:textColor="#FFFFFF"
-        android:layout_below="@+id/lblDataset_exname"
+        android:layout_below="@+id/lblDataset_collection"
         android:layout_marginTop="40dp"
         android:layout_marginStart="20dp"
         
@@ -161,7 +185,7 @@
         android:text="Stop" 
         android:textSize="20sp"
         android:textColor="#FFFFFF"
-        android:layout_below="@+id/lblDataset_exname"
+        android:layout_below="@+id/lblDataset_collection"
         android:layout_marginTop="40dp"
         android:layout_marginStart="180dp"
         
