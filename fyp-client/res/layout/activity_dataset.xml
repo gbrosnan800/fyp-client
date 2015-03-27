@@ -146,7 +146,6 @@
         android:ems="10"
         android:text="bicep_curl"
         android:gravity="center"
-        android:inputType="number"
         android:textColor="#FFFFFF" />
     
      <EditText
@@ -159,7 +158,6 @@
         android:ems="10"
         android:text="new_set"
         android:gravity="center"
-        android:inputType="number"
         android:textColor="#FFFFFF" />
     
     <Button
