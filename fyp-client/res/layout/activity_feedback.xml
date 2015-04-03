@@ -210,18 +210,33 @@
 		android:shadowDx="0"
 		android:shadowDy="0"
 		android:shadowRadius="0"
-	/>    
+	/> 
 	
+    
+    <EditText
+        android:id="@+id/txtFeedback_collection"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btnFeedback_send"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:ems="10"
+        android:text="test_routine"
+        android:gravity="center"
+        android:textColor="#FFFFFF" />
+	
+    
    <TextView
         android:id="@+id/lblFeedback_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/btnFeedback_start"
-        android:layout_marginTop="10dp"
+        android:layout_below="@+id/txtFeedback_collection"
+        android:layout_marginTop="15dp"
         android:layout_centerHorizontal="true"
         android:textColor="#A60002"
         android:text="Status Message" />
     
+
     
 
 </RelativeLayout>
