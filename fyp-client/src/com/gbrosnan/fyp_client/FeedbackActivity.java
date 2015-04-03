@@ -1,20 +1,77 @@
 package com.gbrosnan.fyp_client;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
+import org.apache.http.ConnectionClosedException;
+import org.apache.http.HttpResponse;
+import org.apache.http.NoHttpResponseException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.ConnectionPoolTimeoutException;
+import org.apache.http.entity.InputStreamEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+
+import com.gbrosnan.objects.ExerciseJsonSerializer;
+import com.gbrosnan.objects.ExerciseRaw;
+import com.gbrosnan.objects.SensorSample;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import android.app.Activity;
+import android.content.Context;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
+import android.media.AudioManager;
+import android.media.ToneGenerator;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.PowerManager;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 
-public class FeedbackActivity extends Activity {
+public class FeedbackActivity extends Activity implements OnClickListener, SensorEventListener  {
 
+	private TextView status, current1RPM, nextSet;
+	private Button btnStart, btnStop, btnSend, btsStartTest, btnStopTest, btnSendTest;
+	private EditText txtLiftWeight, txtCollection, txtIpAddress, txtUsername;
+	private SensorManager sensorManager;
+	private Sensor sensor;
+	private boolean started = false;
+	private ExerciseRaw exerciseRaw;
+    private String exerciseAsJsonString;
+    private List<SensorSample> sensorData;
+    PowerManager pm;
+    PowerManager.WakeLock wl;
+	
+		
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView(R.layout.activity_feedback);
+		
+		createComponents();
+		
+        pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        wl = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "My Tag");  
 	}
 
 	@Override
@@ -35,9 +92,237 @@ public class FeedbackActivity extends Activity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
+
+	@Override
+	public void onAccuracyChanged(Sensor arg0, int arg1) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onSensorChanged(SensorEvent event) {
+       
+		if (started) {
+            double x = event.values[0];
+            double y = event.values[1];
+            double z = event.values[2];
+            long timestamp = System.currentTimeMillis();
+            SensorSample sample = new SensorSample(timestamp, x, y, z);
+            sensorData.add(sample);                            
+        }			
+	}
 	
+   @Override
+    protected void onPause() {
+        super.onPause();
+        if (started == true) {
+            sensorManager.unregisterListener(this);
+        }
+    }
+
+	private void createComponents() {
+		
+		status = (TextView) findViewById(R.id.lblFeedback_status);
+		current1RPM = (TextView) findViewById(R.id.lblFeedback_current1rpm);
+		nextSet = (TextView) findViewById(R.id.lblFeedback_nextSet);
+		
+		txtLiftWeight = (EditText) findViewById(R.id.txtFeedback_1rpmtest_enterweight);
+		txtCollection = (EditText) findViewById(R.id.txtFeedback_collection);
+		txtIpAddress = (EditText) findViewById(R.id.txtFeedback_server);
+		txtUsername = (EditText) findViewById(R.id.txtFeedback_username);
+			
+		btnStart = (Button) findViewById(R.id.btnFeedback_start);
+		btnStop = (Button) findViewById(R.id.btnFeedback_stop);
+		btnSend = (Button) findViewById(R.id.btnFeedback_send);
+		btsStartTest = (Button) findViewById(R.id.btnFeedback_1rpmtest_start);
+		btnStopTest = (Button) findViewById(R.id.btnFeedback_1rpmtest_stop);
+		btnSendTest = (Button) findViewById(R.id.btnFeedback_1rpmtest_send);
+		
+		btnStart.setOnClickListener(this);
+		btnStop.setOnClickListener(this);
+		btnSend.setOnClickListener(this);
+		btsStartTest.setOnClickListener(this);
+		btnStopTest.setOnClickListener(this);
+		btnSendTest.setOnClickListener(this);
+		
+		btnStop.setEnabled(false);
+        btnSend.setEnabled(false);
+		btnStopTest.setEnabled(false);
+		btnSendTest.setEnabled(false);
+	}
 	
+	@Override
+	public void onClick(View v) {
+
+		switch (v.getId()) {
+			
+			case R.id.btnFeedback_start:
+				if(isInputValid()) {
+					status.setText("Go after beep!");
+					btnStart.setEnabled(false);
+		            btnStop.setEnabled(false);
+		            btnSend.setEnabled(false);
+		            btsStartTest.setEnabled(false);
+		    		btnStopTest.setEnabled(false);
+		    		btnSendTest.setEnabled(false);
+		    		
+		            sensorData = new ArrayList<SensorSample>();
+					started = true;
+		            Handler handler = new Handler();
+		            handler.postDelayed(new Runnable() {
+		            	public void run() {
+		            		wl.acquire();
+		            		startSensor();
+		            		btnStop.setEnabled(true);
+		            	}            	
+		            }, 4000);
+				}			
+				break;
+				
+			case R.id.btnFeedback_stop:
+				wl.release();
+				btnStart.setEnabled(true);
+	            btnStop.setEnabled(false);
+	            btnSend.setEnabled(true);
+	            btsStartTest.setEnabled(true);
+	    		btnStopTest.setEnabled(false);
+	    		btnSendTest.setEnabled(true);
+	            started = false;
+	            sensorManager.unregisterListener(this);            	            
+	            status.setText("Number of sensor samples: " + sensorData.size());
+				break;
+			
+			case R.id.btnFeedback_send:				
+				createNewExerciseObject();	
+				status.setText("Object created - sending to server...");
+				uploadDataToServer();
+				break;
+				
+				
+			case R.id.btnFeedback_1rpmtest_start:
+				if(isInputValid()) {
+					status.setText("Go after beep!");
+					btnStart.setEnabled(false);
+		            btnStop.setEnabled(false);
+		            btnSend.setEnabled(false);
+		            btsStartTest.setEnabled(false);
+		    		btnStopTest.setEnabled(false);
+		    		btnSendTest.setEnabled(false);
+		    		
+		            sensorData = new ArrayList<SensorSample>();
+					started = true;
+		            Handler handler = new Handler();
+		            handler.postDelayed(new Runnable() {
+		            	public void run() {
+		            		wl.acquire();
+		            		startSensor();
+		            		btnStop.setEnabled(true);
+		            	}            	
+		            }, 4000);
+				}			
+				break;
+				
+			case R.id.btnFeedback_1rpmtest_stop:
+				wl.release();
+				btnStart.setEnabled(true);
+	            btnStop.setEnabled(false);
+	            btnSend.setEnabled(true);
+	            btsStartTest.setEnabled(true);
+	    		btnStopTest.setEnabled(false);
+	    		btnSendTest.setEnabled(true);
+	            started = false;
+	            sensorManager.unregisterListener(this);            	            
+	            status.setText("Number of sensor samples: " + sensorData.size());
+				break;
+			
+			case R.id.btnFeedback_1rpmtest_send:				
+				createNewExerciseObject();	
+				status.setText("Object created - sending to server...");
+				uploadDataToServer();
+				break;
+				
+			default:
+				break;			
+		}
+	}
 	
+	private boolean isInputValid() {
+	   
+		String weightInput = txtLiftWeight.getText().toString();
+		   
+		if(isNumeric(weightInput) ) {
+			return true;
+		}
+		else {
+			status.setText("Weight must be numeric");
+			return false;
+		}
+	}
+
+   // Taken from StackOverflow == http://stackoverflow.com/questions/14206768/how-to-check-if-a-string-is-numeric
+	private boolean isNumeric(String str)	{
+		return str.matches("-?\\d+(\\.\\d+)?");  //match a number with optional '-' and decimal.
+	}
+
+	private void startSensor() { 
+		sensor = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
+		ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 50);
+		toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 500);	
+		sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_FASTEST);
+	}
+	 
+	private void createNewExerciseObject() {
+	   	
+		String username = txtUsername.getText().toString();   	
+		double weight = Double.parseDouble(txtLiftWeight.getText().toString());
+		Date date = getNewDate();
+		exerciseRaw = new ExerciseRaw(0, "dataset", username, "unknown", weight, 0, date, sensorData);
+		Gson gson = new GsonBuilder().registerTypeAdapter(ExerciseRaw.class, new ExerciseJsonSerializer()).create();
+		exerciseAsJsonString = gson.toJson(exerciseRaw);   	
+	}
+	   
+	public Date getNewDate() {
+		Calendar cal = Calendar.getInstance();
+		return cal.getTime();    	
+	}	
+
+	private void uploadDataToServer() {
+	   
+		String ipAdddress = txtIpAddress.getText().toString();	   
+		String collectionName = txtCollection.getText().toString();
+		String uri = "http://" + ipAdddress  + "/fyp-server/rest/datasetitem/" + collectionName;
+		
+		HttpClient httpclient = new DefaultHttpClient();
+		HttpPost httppost = new HttpPost(uri);
+		String responseString = "";	   
+		try {
+			InputStream jsonStream = new ByteArrayInputStream(exerciseAsJsonString.getBytes());
+			InputStreamEntity reqEntity = new InputStreamEntity(jsonStream, -1);
+			reqEntity.setContentType("binary/octet-stream");       	
+			reqEntity.setChunked(true); // Send in multiple parts if needed
+			httppost.setEntity(reqEntity);
+			HttpResponse response = httpclient.execute(httppost);	 	    
+			StringBuilder sb = new StringBuilder();
+			BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()), 65728);
+			String line = null;
+			while ((line = reader.readLine()) != null) {
+				sb.append(line);
+			}
+			responseString = sb.toString();	   	 	    
+			status.setText(responseString);
+			    
+		} catch (NoHttpResponseException e) {
+			status.setText(e.toString());		
+		} catch (ConnectionClosedException e) {
+			status.setText(e.toString());
+		} catch (ConnectionPoolTimeoutException e) {
+			status.setText(e.toString());
+		} catch (IOException e) {
+			status.setText(e.toString());
+		} catch (Exception e) {
+			status.setText(e.toString());
+		} 
+	}	
 	
-	
+	  
 }
