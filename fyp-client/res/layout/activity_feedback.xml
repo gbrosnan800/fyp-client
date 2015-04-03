@@ -9,7 +9,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.gbrosnan.fyp_client.FeedbackActivity" >
-
+   
     <ImageView
         android:id="@+id/logo_feedback"
         android:layout_width="wrap_content"
@@ -26,15 +26,202 @@
 		android:textColor="#095529"
         android:text="Feedback-Demo" />
     
-    
     <TextView
-        android:id="@+id/lblFeedback_status"
+        android:id="@+id/lblFeedback_1rpmtest"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/feedback_header"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginStart="35dp"
+        android:text="1RPM-TEST"
+        android:textColor="#095529"
+        android:textStyle="bold" />
+    
+    <TextView
+        android:id="@+id/lblFeedback_1rpmtest_enterweight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/lblFeedback_1rpmtest"
+        android:layout_alignBottom="@+id/lblFeedback_1rpmtest"
+        android:layout_marginStart="155dp"
+        android:text="Weight"
+        android:textColor="#095529" />
+
+    <EditText
+        android:id="@+id/txtFeedback_1rpmtest_enterweight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/lblFeedback_1rpmtest"
+        android:layout_alignBottom="@+id/lblFeedback_1rpmtest"
+        android:layout_marginStart="205dp"
+        android:ems="3"
+        android:text="10"
+        android:gravity="center"
+        android:inputType="number"
+        android:textColor="#FFFFFF" />
+    
+    <TextView
+        android:id="@+id/lblFeedback_1rpmtest_kg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/lblFeedback_1rpmtest"
+        android:layout_alignBottom="@+id/lblFeedback_1rpmtest"
+        android:layout_marginStart="265dp"
+        android:text="Kg"
+        android:textColor="#095529" />
+    
+    
+    
+    <Button
+        android:id="@+id/btnFeedback_1rpmtest_start"
+        android:text="Start" 
+        android:textSize="20sp"
+        android:textColor="#FFFFFF"
+        android:layout_below="@+id/lblFeedback_1rpmtest"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp"
+        
+		android:layout_width="80dp"
+		android:layout_height="35dp"
+		android:background="@drawable/buttonshape"
+		android:shadowColor="#A8A8A8"
+		android:shadowDx="0"
+		android:shadowDy="0"
+		android:shadowRadius="0"
+	/>
+    
+    <Button
+        android:id="@+id/btnFeedback_1rpmtest_stop"
+        android:text="Stop" 
+        android:textSize="20sp"
+        android:textColor="#FFFFFF"
+        android:layout_below="@+id/lblFeedback_1rpmtest"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="125dp"
+        
+		android:layout_width="80dp"
+		android:layout_height="35dp"
+		android:background="@drawable/buttonshape"
+		android:shadowColor="#A8A8A8"
+		android:shadowDx="0"
+		android:shadowDy="0"
+		android:shadowRadius="0"
+	/>
+        
+    <Button
+        android:id="@+id/btnFeedback_1rpmtest_send"
+        android:text="Send" 
+        android:textSize="20sp"
+        android:textColor="#FFFFFF"
+        android:layout_below="@+id/lblFeedback_1rpmtest"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="220dp"
+        
+		android:layout_width="80dp"
+		android:layout_height="35dp"
+		android:background="@drawable/buttonshape"
+		android:shadowColor="#A8A8A8"
+		android:shadowDx="0"
+		android:shadowDy="0"
+		android:shadowRadius="0"
+	/>
+    
+    <View
+        android:id="@+id/rctFeedback_backgroundinfo"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_below="@+id/btnFeedback_1rpmtest_start"
+        android:layout_marginTop="60dp"        
+        android:background="@drawable/rectangle" />
+    
+    
+    <TextView
+        android:id="@+id/lblFeedback_current1rpm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+		android:layout_below="@+id/btnFeedback_1rpmtest_start"
+		android:layout_marginTop="71dp"
+        android:text="Current 1RPM: 10kg"
+        android:textSize="22sp"
+        android:textColor="#FFFFFF"
+        android:layout_centerHorizontal="true" />
+    
+    <TextView
+        android:id="@+id/lblFeedback_nextSet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+		android:layout_below="@+id/lblFeedback_current1rpm"
+		android:layout_marginTop="80dp"
+		android:layout_marginStart="10dp"
+        android:text="Next Set: 14kg x 10 reps"
+        android:textSize="20sp"
+        android:textColor="#FFFFFF"
+        android:layout_centerHorizontal="true" />
+    
+    <Button
+        android:id="@+id/btnFeedback_start"
+        android:text="Start" 
+        android:textSize="20sp"
+        android:textColor="#FFFFFF"
+        android:layout_below="@+id/lblFeedback_nextSet"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp"
+        
+		android:layout_width="80dp"
+		android:layout_height="35dp"
+		android:background="@drawable/buttonshape"
+		android:shadowColor="#A8A8A8"
+		android:shadowDx="0"
+		android:shadowDy="0"
+		android:shadowRadius="0"
+	/>
+    
+    <Button
+        android:id="@+id/btnFeedback_stop"
+        android:text="Stop" 
+        android:textSize="20sp"
+        android:textColor="#FFFFFF"
+        android:layout_below="@+id/lblFeedback_nextSet"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="125dp"
+        
+		android:layout_width="80dp"
+		android:layout_height="35dp"
+		android:background="@drawable/buttonshape"
+		android:shadowColor="#A8A8A8"
+		android:shadowDx="0"
+		android:shadowDy="0"
+		android:shadowRadius="0"
+	/>
+        
+    <Button
+        android:id="@+id/btnFeedback_send"
+        android:text="Send" 
+        android:textSize="20sp"
+        android:textColor="#FFFFFF"
+        android:layout_below="@+id/lblFeedback_nextSet"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="220dp"
+        
+		android:layout_width="80dp"
+		android:layout_height="35dp"
+		android:background="@drawable/buttonshape"
+		android:shadowColor="#A8A8A8"
+		android:shadowDx="0"
+		android:shadowDy="0"
+		android:shadowRadius="0"
+	/>    
+	
+   <TextView
+        android:id="@+id/lblFeedback_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btnFeedback_start"
+        android:layout_marginTop="10dp"
         android:layout_centerHorizontal="true"
         android:textColor="#A60002"
-        android:text="--- WORK IN PROGESS ---" />
+        android:text="Status Message" />
+    
+    
 
 </RelativeLayout>
