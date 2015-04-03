@@ -26,12 +26,80 @@
 		android:textColor="#095529"
         android:text="Feedback-Demo" />
     
+    	
+    
+    <EditText
+        android:id="@+id/txtFeedback_collection"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/feedback_header"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
+        android:ems="10"
+        android:text="test_routine"
+        android:gravity="center"
+        android:textColor="#FFFFFF" />
+    
+    <EditText
+        android:id="@+id/txtFeedback_username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txtFeedback_collection"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="6dp"
+        android:ems="10"
+        android:text="test_user"
+        android:gravity="center"
+        android:textColor="#FFFFFF" />
+        
+     <EditText
+        android:id="@+id/txtFeedback_server"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txtFeedback_username"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="6dp"
+        android:ems="10"
+        android:text="192.168.173.1:8081"
+        android:gravity="center"
+        android:textColor="#FFFFFF" />
+            
+    
+   <TextView
+        android:id="@+id/lblFeedback_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txtFeedback_server"
+        android:layout_marginTop="10dp"
+        android:layout_centerHorizontal="true"
+        android:textColor="#A60002"
+        android:text="Status Message" />
+   
+    <Button
+        android:id="@+id/btnFeedback_refresh"
+        android:text="Refresh" 
+        android:textSize="20sp"
+        android:textColor="#FFFFFF"
+        android:layout_below="@+id/lblFeedback_status"
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true"
+        
+		android:layout_width="80dp"
+		android:layout_height="35dp"
+		android:background="@drawable/buttonshape"
+		android:shadowColor="#A8A8A8"
+		android:shadowDx="0"
+		android:shadowDy="0"
+		android:shadowRadius="0"
+	/>
+    
+    
     <TextView
         android:id="@+id/lblFeedback_1rpmtest"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/feedback_header"
-        android:layout_marginTop="60dp"
+        android:layout_below="@+id/btnFeedback_refresh"
+        android:layout_marginTop="20dp"
         android:layout_marginStart="35dp"
         android:text="1RPM-TEST"
         android:textColor="#095529"
@@ -70,8 +138,7 @@
         android:text="Kg"
         android:textColor="#095529" />
     
-    
-    
+       
     <Button
         android:id="@+id/btnFeedback_1rpmtest_start"
         android:text="Start" 
@@ -131,7 +198,7 @@
         android:layout_width="wrap_content"
         android:layout_height="50dp"
         android:layout_below="@+id/btnFeedback_1rpmtest_start"
-        android:layout_marginTop="60dp"        
+        android:layout_marginTop="15dp"        
         android:background="@drawable/rectangle" />
     
     
@@ -140,7 +207,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 		android:layout_below="@+id/btnFeedback_1rpmtest_start"
-		android:layout_marginTop="71dp"
+		android:layout_marginTop="26dp"
         android:text="Current 1RPM: 10kg"
         android:textSize="22sp"
         android:textColor="#FFFFFF"
@@ -151,7 +218,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 		android:layout_below="@+id/lblFeedback_current1rpm"
-		android:layout_marginTop="80dp"
+		android:layout_marginTop="20dp"
 		android:layout_marginStart="10dp"
         android:text="Next Set: 14kg x 10 reps"
         android:textSize="20sp"
@@ -164,7 +231,7 @@
         android:textSize="20sp"
         android:textColor="#FFFFFF"
         android:layout_below="@+id/lblFeedback_nextSet"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         android:layout_marginStart="20dp"
         
 		android:layout_width="80dp"
@@ -182,7 +249,7 @@
         android:textSize="20sp"
         android:textColor="#FFFFFF"
         android:layout_below="@+id/lblFeedback_nextSet"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         android:layout_marginStart="125dp"
         
 		android:layout_width="80dp"
@@ -200,7 +267,7 @@
         android:textSize="20sp"
         android:textColor="#FFFFFF"
         android:layout_below="@+id/lblFeedback_nextSet"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         android:layout_marginStart="220dp"
         
 		android:layout_width="80dp"
@@ -211,32 +278,6 @@
 		android:shadowDy="0"
 		android:shadowRadius="0"
 	/> 
-	
-    
-    <EditText
-        android:id="@+id/txtFeedback_collection"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/btnFeedback_send"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
-        android:ems="10"
-        android:text="test_routine"
-        android:gravity="center"
-        android:textColor="#FFFFFF" />
-	
-    
-   <TextView
-        android:id="@+id/lblFeedback_status"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/txtFeedback_collection"
-        android:layout_marginTop="15dp"
-        android:layout_centerHorizontal="true"
-        android:textColor="#A60002"
-        android:text="Status Message" />
-    
-
     
 
 </RelativeLayout>
