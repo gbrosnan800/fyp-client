@@ -219,7 +219,7 @@ public class DetectActivity extends Activity implements OnClickListener, SensorE
    private void detectExercise() {
 	   
 	   String ipAdddress = txtIpAddress.getText().toString();	   
-	   String uri = "http://" + ipAdddress  + "/fyp-server/rest/detect";
+	   String uri = "http://" + ipAdddress  + "/fyp-server/rest/ann/detect";
 
 	   HttpClient httpclient = new DefaultHttpClient();
 	   HttpPost httppost = new HttpPost(uri);
