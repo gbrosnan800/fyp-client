@@ -315,7 +315,7 @@ public class FeedbackActivity extends Activity implements OnClickListener, Senso
 	   
 		String ipAdddress = txtIpAddress.getText().toString();	   
 		String collectionName = txtCollection.getText().toString();
-		String uri = "http://" + ipAdddress  + "/fyp-server/rest/" + type + "/" + collectionName;
+		String uri = "http://" + ipAdddress  + "/fyp-server/rest/ann/" + type + "/" + collectionName;
 		
 		HttpClient httpclient = new DefaultHttpClient();
 		HttpPost httppost = new HttpPost(uri);
@@ -363,7 +363,7 @@ public class FeedbackActivity extends Activity implements OnClickListener, Senso
 		
 		String ipAdddress = txtIpAddress.getText().toString();	   
 		String collectionName = txtCollection.getText().toString();
-		String uri = "http://" + ipAdddress  + "/fyp-server/rest/routine/" + collectionName;
+		String uri = "http://" + ipAdddress  + "/fyp-server/rest/ann/routine/" + collectionName;
 		
 		HttpClient httpclient = new DefaultHttpClient();
 		HttpGet request = new HttpGet(uri);
@@ -376,17 +376,16 @@ public class FeedbackActivity extends Activity implements OnClickListener, Senso
 			while ((line = reader.readLine()) != null) {
 				sb.append(line);
 			}
-			responseString = sb.toString();	   	
+			responseString = sb.toString();	 			
 			JSONObject responseAsJson = new JSONObject(responseString);
 				
 			if(responseAsJson.getString("status").equals("ok")) {	
 				displayRouteInfo(responseAsJson);
-
 			}
 			else {
 				status.setText(responseAsJson.getString("server_error"));
 			}
-			
+
 		} catch (NoHttpResponseException e) {
 			status.setText(e.toString());		
 		} catch (ConnectionClosedException e) {
@@ -395,7 +394,7 @@ public class FeedbackActivity extends Activity implements OnClickListener, Senso
 			status.setText(e.toString());
 		} catch (IOException e) {
 			status.setText(e.toString());
-		} catch (JSONException e) {
+	/*	} catch (JSONException e) {*/
 			status.setText(e.toString());			
 		} catch (Exception e) {
 			status.setText(e.toString());
@@ -408,7 +407,7 @@ public class FeedbackActivity extends Activity implements OnClickListener, Senso
 		String currentRM = responseAsJson.getString("rm");
 		String difference = responseAsJson.getString("difference");
 		String nextWeight = responseAsJson.getString("next_weight");
-		current1RM.setText("Current 1RM: " + currentRM + "kg (" + difference + ")"); 
+		current1RM.setText("Current 1RM: " + currentRM + "kg " + difference); 
 		nextSet.setText("Next Set: " + nextWeight + "kg x 10 reps");
 		
 	}
