@@ -394,7 +394,7 @@ public class FeedbackActivity extends Activity implements OnClickListener, Senso
 			status.setText(e.toString());
 		} catch (IOException e) {
 			status.setText(e.toString());
-	/*	} catch (JSONException e) {*/
+		} catch (JSONException e) {
 			status.setText(e.toString());			
 		} catch (Exception e) {
 			status.setText(e.toString());
@@ -408,8 +408,7 @@ public class FeedbackActivity extends Activity implements OnClickListener, Senso
 		String difference = responseAsJson.getString("difference");
 		String nextWeight = responseAsJson.getString("next_weight");
 		current1RM.setText("Current 1RM: " + currentRM + "kg " + difference); 
-		nextSet.setText("Next Set: " + nextWeight + "kg x 10 reps");
-		
+		nextSet.setText("Next Set: " + nextWeight + "kg x 10 reps");	
 	}
 	
 	  
