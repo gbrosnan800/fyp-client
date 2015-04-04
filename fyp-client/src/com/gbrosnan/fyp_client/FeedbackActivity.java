@@ -409,6 +409,7 @@ public class FeedbackActivity extends Activity implements OnClickListener, Senso
 		String nextWeight = responseAsJson.getString("next_weight");
 		current1RM.setText("Current 1RM: " + currentRM + "kg " + difference); 
 		nextSet.setText("Next Set: " + nextWeight + "kg x 10 reps");	
+		txtLiftWeight.setText(nextWeight);
 	}
 	
 	  
