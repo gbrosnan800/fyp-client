@@ -36,7 +36,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="15dp"
         android:ems="10"
-        android:text="test_routine"
+        android:text="routine_test"
         android:gravity="center"
         android:textColor="#FFFFFF" />
     
